@@ -1,0 +1,66 @@
+■python（リスト、内包表記）
+
+---------------------------------------------------------------
+ 二次元リストの一次元化
+---------------------------------------------------------------
+target_list = ['setai', 'kozin', 'child0412', 'child1319', 'F1', 'F2', 'F3', 'M1', 'M2', 'M3']
+target_c_list = [[s + '_corr', s + '_rmse'] for s in target_list]
+target_x_list = ['month'] + [x for y in target_c_list for x in y]
+print(target_x_list)
+
+
+---------------------------------------------------------------
+ リストの一部削除
+---------------------------------------------------------------
+target_x_list.remove('month')
+
+
+---------------------------------------------------------------
+ 内包表記
+---------------------------------------------------------------
+time_list_int = [515, 530, 545, 600, 615, 630, 645, 700, 715, 730, 745, 800]
+
+l1 = [[int(int(t) / 100), int(t) % 100] for t in time_list_int]
+l2 = [datetime.time(hour=h, minute=m, second=0, microsecond=0) for h, m in l1]
+print(l2)
+[datetime.time(5, 15), datetime.time(5, 30), datetime.time(5, 45), datetime.time(6, 0), datetime.time(6, 15), datetime.time(6, 30), datetime.time(6, 45), datetime.time(7, 0), datetime.time(7, 15), datetime.time(7, 30), datetime.time(7, 45), datetime.time(8, 0)]
+
+time_list = [datetime.time(hour=h, minute=m, second=0, microsecond=0) for h, m in [[int(int(t) / 100), int(t) % 100] for t in time_list_int]]
+print(time_list)
+[datetime.time(5, 15), datetime.time(5, 30), datetime.time(5, 45), datetime.time(6, 0), datetime.time(6, 15), datetime.time(6, 30), datetime.time(6, 45), datetime.time(7, 0), datetime.time(7, 15), datetime.time(7, 30), datetime.time(7, 45), datetime.time(8, 0)]
+
+
+target_list = ['setai', 'kozin', 'child0412', 'child1319', 'F1', 'F2', 'F3', 'M1', 'M2', 'M3']
+sum_str_list = ['SUM(' + s + ') AS ' + s for s in target_list]
+
+
+target_list = ['setai', 'kozin', 'child', 'teen', 'F1', 'F2', 'F3', 'M1', 'M2', 'M3']
+convert_list = ['child0412' if s == 'child' else 'child1319' if s == 'teen' else s for s in target_list]
+convert_list = ['child' if s == 'child0412' else 'teen' if s == 'child1319' else s for s in target_list]
+
+▼2つのリストを使って辞書を作る
+all_target_list = ['setai', 'kozin', 'child0412', 'child1319', 'MF20plus', 'M1', 'M2', 'M3', 'F20plus', 'F1', 'F2', 'F3', 'shufu', 'F5059', 'shufukid', 'F1834', 'F2539', 'M2049', 'fp845', 'fp846']
+p_all_target_list = [f'p_{target}' for target in all_target_list]
+target_name_dic = {name:p_name for name, p_name in zip(all_target_list, p_all_target_list)}
+
+
+---------------------------------------------------------------
+ 内包表記（書き換え例）
+---------------------------------------------------------------
+judge = True
+for i in range(len(d)):
+    if np.abs(d[i]) > EPS:
+        judge = False
+return judge
+     ↓
+     ↓
+     ↓
+return all(np.abs(x) <= EPS for x in d)
+
+
+for i in range(len(c)):
+    c[i] += mc[i]
+     ↓
+     ↓
+     ↓
+c = [x + y for x, y in zip(c, mc)]

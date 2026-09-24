@@ -1,0 +1,108 @@
+■bash
+
+---------------------------------------------------------------
+ 日付ループ
+---------------------------------------------------------------
+#!/bin/bash
+
+STARTDATE=20180301
+ENDDATE=20181004
+
+CURRENTDATE=$STARTDATE
+while [ 1 ] ; do
+    # 処理
+    if [ $CURRENTDATE = $ENDDATE ] ; then
+        break
+    fi
+    python predict_p_kanto_weather.py $CURRENTDATE
+    CURRENTDATE=`date -d "$CURRENTDATE 1day" "+%Y%m%d"`
+done
+
+
+---------------------------------------------------------------
+ 日付ループ(ハイフン付き)
+---------------------------------------------------------------
+#!/bin/bash
+
+STARTDATE=2018-03-01
+ENDDATE=2018-10-04
+
+CURRENTDATE=$STARTDATE
+while [ 1 ] ; do
+    # 処理
+    if [ $CURRENTDATE = $ENDDATE ] ; then
+        break
+    fi
+    python predict_p_kanto_weather.py $CURRENTDATE
+    CURRENTDATE=`date -d "$CURRENTDATE 1day" "+%Y-%m-%d"`
+done
+
+
+---------------------------------------------------------------
+ 年月ファイル
+---------------------------------------------------------------
+dm=`date "+%Y%m"`
+perl 10epg.pl >>logs/10epg_$dm.log 2>&1
+
+-
+--------------------------------------------------------------
+ 年月ファイル
+---------------------------------------------------------------
+date +%F > today.txt
+# today.txt ---> 2018-02-23
+
+
+---------------------------------------------------------------
+ 定期的(数秒ごとなど)に連続実行
+---------------------------------------------------------------
+watch -n 1 ls -la
+watch -n 60 ps aux | grep python
+
+
+---------------------------------------------------------------
+ ファイル一覧ループ
+---------------------------------------------------------------
+for file in `\find . -name '*.tar'`; do
+    tar xvf $file
+done
+
+
+---------------------------------------------------------------
+ ファイルを読み込んで行ごとに処理
+---------------------------------------------------------------
+#!/bin/bash
+
+while read line
+do
+  fname=`echo ${line} | awk -F "/" '{ print $NF }'`
+  `gsutil cp ${line} ${fname}`
+  `gsutil cp ${fname} gs://sharest-interface-file-past/using_data/epg_pv/${fname}`
+  `rm -f ${fname}`
+done < epg_pv.list
+
+
+---------------------------------------------------------------
+ ディレクトリのファイル数を表示する
+---------------------------------------------------------------
+#!/bin/bash
+
+dir_list=`ls -R ~/Backend_Py3/rt_model/model/ | grep "/1:"`
+for file in $dir_list; do
+	dir=`echo $file | sed -e 's/1://g'`
+	if [ `echo $dir | grep c7` ]; then
+		size=`ls -la ${dir}1 | wc -l`
+		echo $size:$dir${i}
+	else
+		for i in {1..7} ; do
+			size=`ls -la $dir${i} | wc -l`
+			echo $size:$dir${i}
+		done
+	fi
+done
+
+dir_list=`ls -R ~/Backend_Py3/zero_model/model/ | grep -E "/[0-9]{8}:"`
+for file in $dir_list; do
+	dir=`echo $file | sed -e 's/://g'`
+	size=`ls -la ${dir} | wc -l`
+	echo $size:$dir
+done
